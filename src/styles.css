@@ -1,1 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
+
+body{
+  margin-top:20px;
+}
+
+.member-entry {
+  border: 1px solid #ebebeb;
+  padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  -moz-box-shadow:  0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  -webkit-box-shadow:  0 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  box-shadow: 1px 0px 1.5rem 4rem rgba(22, 28, 45, 0.1);
+  -moz-transition: all 300ms ease-in-out;
+  -webkit-transition: all 300ms ease-in-out;
+  -o-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+  -webkit-border-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 3px;
+  -moz-background-clip: padding;
+  border-radius: 3px;
+  background-clip: padding-box;
+  background:#fff;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2),0 6px 10px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.2),0 6px 10px 0 rgba(0,0,0,0.3);
+}
+.member-entry:before,
+.member-entry:after {
+  content: " ";
+  display: table;
+}
+.member-entry:after {
+  clear: both;
+}
+.member-entry:hover {
+  background: rgba(235, 235, 235, 0.3);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+  box-shadow: 1px 1px 1px rgba(0, 1, 1, 0.06);
+}
+
+
+
+
+
+
