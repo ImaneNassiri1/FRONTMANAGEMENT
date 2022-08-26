@@ -1,29 +1,25 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
 <nav class="navbar navbar-expand-lg bg-dark">
   <a class="navbar-brand" style="color: white;"  >Question Manager</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarColor02">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" (click)="onOpenModal(null,'add')" style="color: white;">Add Question <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input type="search" (ngModelChange)="searchQuestions(key.value)" #key="ngModel" ngModel name="question" id="searchName" class="form-control mr-sm-2" placeholder="Search ..." required>
-    </form>
-  </div>
 </nav>
 <div class="container" id="main-container">
 
   <div class="row">
 
-    <mat-horizontal-stepper>
+    <mat-horizontal-stepper >
+
       <div *ngFor="let question of questions" class="col-md-6 col-xl-3">
+
+
         <mat-step>
-          <ng-template matStepLabel="Question"> Question</ng-template>
+
+          <ng-template matStepLabel="Question" ><p (click)="getQuestionResponses(question.question)"> Question </p></ng-template>
 
           <div class="card m-b-30">
             <div class="card-body row">
@@ -43,32 +39,34 @@
 
 
           <div class="card m-b-30" (click)="onOpenModal(question,'edit')" data-placement="">
-              <form #f (ngSubmit)="getAnswer(question)" >
-            <div *ngFor="let question of questions"  class="member-entry">
-              <div class="clear"></div>
-              <div class="col-6 card-title align-self-center mb-0">
-                <a (click)="onUpdateQuestion(editForm.value)" >{{question?.response}}</a>
+            <form  >
+              <div *ngFor="let questionResponse of questionResponses.slice(0,3)"  class="member-entry">
+                <div class="clear"></div>
+                <div class="col-6 card-title align-self-center mb-0">
+                  <a (click)="onUpdateQuestion(question,questionResponse.response)"  >{{questionResponse?.response}}</a>
+
+                </div>
+
               </div>
-
-            </div>
-              </form>
+            </form>
 
 
-            <div class="card m-b-30">
+            <div class="align-items-center" style="width:100px"><button class="btn btn-dark" (click)="nothidden=false" *ngIf="nothidden">Autres</button></div>
+            <div class="card m-b-30" *ngIf="!nothidden">
 
               <ul class="list-group list-group-flush">
                 <div id="updateQuestionModal" tabindex="-1" aria-labelledby="employeeEditModalLabel" aria-hidden="true">
                   <div class="modal-body">
                     <form #editForm="ngForm">
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="id"></label>
                         <input type="hidden" ngModel="{{editQuestion?.id}}" name="id" class="form-control" id="id" placeholder="id">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="client"></label>
                         <input type="hidden" ngModel="{{editQuestion?.client}}" name="client" class="form-control" id="client" aria-describedby="emailHelp" placeholder="client">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="question"></label>
                         <input type="hidden" ngModel="{{editQuestion?.question}}" name="question" class="form-control" id="question" placeholder="Question">
                       </div>
@@ -76,24 +74,24 @@
                         <label for="response">response</label>
                         <input type="text" ngModel="{{editQuestion?.response}}" name="response" class="form-control" id="response" placeholder="Response">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="category"></label>
                         <input type="hidden" ngModel="{{editQuestion?.category}}" name="category" class="form-control" id="category" placeholder="Category">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="compliance"></label>
                         <input type="hidden" ngModel="{{editQuestion?.compliance}}" name="compliance" class="form-control" id="compliance" placeholder="compliance">
                       </div>
-                      <div class="form-group">
-                        <label for="comments">Comments</label>
-                        <input type="text" ngModel="{{editQuestion?.comments}}" name="Comments" class="form-control" id="comments" name="comments" placeholder="Comments">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
+                        <label for="comments"></label>
+                        <input type="hidden" ngModel="{{editQuestion?.comments}}" name="Comments" class="form-control" id="comments" name="comments" placeholder="Comments">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" style="width: 0px;height:0px;margin-bottom: 0px">
                         <label for="tenderResponseDate"></label>
                         <input type="hidden" ngModel="{{editQuestion?.tenderResponseDate}}" name="tenderResponseDate" class="form-control" id="tenderResponseDate" name="tenderResponseDate" placeholder="tenderResponseDate">
                       </div>
                       <div class="modal-footer">
-                        <button (click)="onUpdateQuestion(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                        <button (click)="onUpdateQuestion(editForm.value,'')"(click)="onUpdateFiles(editForm.value)"  data-dismiss="modal" class="btn btn-dark"  >Save changes</button>
                       </div>
                     </form>
                   </div>
@@ -111,144 +109,22 @@
 
         </mat-step>
 
+
       </div>
 
     </mat-horizontal-stepper>
+
+    <label _ngcontent-jsw-c76="" class="btn btn-default btn-sm center-block btn-file" style="height: 32px;width: 522px;">
+      <i _ngcontent-jsw-c76="" aria-hidden="true" class="fa fa-upload fa-2x"></i>
+      <input _ngcontent-jsw-c76="" type="file" class="file-input" style="display: none;"(change)="onFileSelected($event)"#fileUpload />
+    </label>
+
+
   </div>
 
 </div>
 
 
-
-<!-- Add Question Modal -->
-<div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addQuestionModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addQuestionModalLabel">Add Question</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <!-- <div class="modal-body">
-         <form #addForm="ngForm" (ngSubmit)="onAddQuestion(addForm)">
-           <div class="form-group">
-             <label for="id">id</label>
-             <input type="text" ngModel name="id" class="form-control" id="id" placeholder="id" required>
-           </div>
-           <div class="form-group">
-             <label for="client">client</label>
-             <input type="text" ngModel name="client" class="form-control" id="client" placeholder="client" required>
-           </div>
-
-           <div class="form-group">
-             <label for="question">question</label>
-             <input type="text" ngModel name="question" class="form-control" id="question" placeholder="Question" required>
-           </div>
-           <div class="form-group">
-             <label for="response">response</label>
-             <input type="text" ngModel name="response" class="form-control" id="response" placeholder="response" required>
-
-           </div>
-           <div class="form-group">
-             <label for="category">category</label>
-             <input type="text" ngModel name="category" class="form-control" id="category" placeholder="Category" required>
-           </div>
-           <div class="form-group">
-             <label for="compliance">compliance</label>
-             <input type="text" ngModel name="compliance" class="form-control" id="compliance" placeholder="compliance" required>
-           </div>
-           <div class="form-group">
-             <label for="comments">comments</label>
-             <input type="text" ngModel name="comments" class="form-control" id="comments" placeholder="comments" required>
-           </div>
-           <div class="form-group">
-             <label for="tenderResponseDate">tenderResponseDate</label>
-             <input type="date" ngModel name="tenderResponseDate" class="form-control" id="tenderResponseDate" placeholder="tenderResponseDate" required>
-           </div>-->
-      <div class="modal-body">
-        <form #addForm="ngForm" (ngSubmit)="onAddQuestion(addForm)">
-          <div class="form-group">
-            <label for="id">id</label>
-            <input type="text" ngModel name="id" class="form-control"  placeholder="id" required>
-          </div>
-          <div class="form-group">
-            <label for="client">client</label>
-            <input type="text" ngModel name="client" class="form-control"  placeholder="client" required>
-          </div>
-
-          <div class="form-group">
-            <label for="question">question</label>
-            <input type="text" ngModel name="question" class="form-control"  placeholder="Question" required>
-          </div>
-          <div class="form-group">
-            <label for="response">response</label>
-            <input type="text" ngModel name="response" class="form-control"  placeholder="response" required>
-
-          </div>
-          <div class="form-group">
-            <label for="category">category</label>
-            <input type="text" ngModel name="category" class="form-control"  placeholder="Category" required>
-          </div>
-          <div class="form-group">
-            <label for="compliance">compliance</label>
-            <input type="text" ngModel name="compliance" class="form-control"  placeholder="compliance" required>
-          </div>
-          <div class="form-group">
-            <label for="comments">comments</label>
-            <input type="text" ngModel name="comments" class="form-control"  placeholder="comments" required>
-          </div>
-          <div class="form-group">
-            <label for="tenderResponseDate">tenderResponseDate</label>
-            <input type="date" ngModel name="tenderResponseDate" class="form-control"  placeholder="tenderResponseDate" required>
-          </div>
-
-
-          <div class="modal-footer">
-            <button type="button" id="add-question-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Edit Modal -->
-
-
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModelLabel">Delete Question</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <!--<div class="modal-body">
-        <p>Are you sure you want to delete question {{deleteQuestion?.client}}?</p>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button (click)="onDeleteQuestion(deleteQuestionId)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-        </div>
-      </div>-->
-    </div>
-  </div>
-</div>
-
-<!--<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload> &ndash;&gt;
-
-<div class="file-upload">
-
-  {{fileName || "No file uploaded yet."}}
-
-  <button mat-mini-fab color="primary" class="upload-btn"
-          (click)="fileUpload.click()">
-
-  </button>
-</div>-->
 
 
 <!-- Notification for no employees -->
@@ -266,39 +142,11 @@
 
 
 
-<!--
-<div class="container">
-  <div class="row bootstrap snippets bootdeys">
-    <div class="col-md-9 col-sm-7">
-      <h2>Answers</h2>
-    </div>
-  </div>
-  <div *ngFor="let question of questions"class="member-entry">
-    <div class="member-details">
-      <div class="clear"></div>
-      <div class="col-sm-4">
-        <div class="col-6 card-title align-self-center mb-0">
-          <a href="#">{{question?.response}}</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-</div>
--->
 
 
 
 
 
 
-<!--<div class="member-entry">
-  <div class="member-details">
-    <div class="clear"></div>
-    <div class="col-sm-4">
-      <i class="fa fa-location"></i>
-      <a href="#">Prishtina</a>
-    </div>
-  </div>
-</div>-->
+
+

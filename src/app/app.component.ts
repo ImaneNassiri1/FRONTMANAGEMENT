@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Question } from './question';
+import { Files,Question } from './question';
 import { QuestionService } from "./question.service";
 import {  HostBinding, Input } from '@angular/core';
 
@@ -17,6 +17,8 @@ export class AppComponent implements OnInit {
   [x: string]: any;
   fileName = '';
   public questions!: Question[] ;
+  public files!: Files[] ;
+  public questionResponses: Question[] =[];
   public responses!:Question[] ;
   public editQuestion!: Question | null;
   public deleteQuestion!: Question | null;
@@ -24,15 +26,19 @@ export class AppComponent implements OnInit {
   private apiServerUrl=environment.apiBaseUrl;
   public stepIndex!: number;
   public size:number=3;
+  public editFiles!: Files | null;
 
   constructor(private questionService : QuestionService){}
 
   ngOnInit(): void {
     this.getQuestion();
+    //this.getQuestionResponses(this.questions[0].question);
+
   }
 
   @HostBinding('class.activeStep')
   public isActive = false;
+  nothidden: boolean=true;
 
   @Input() public set activeState(step: this) {
     this.isActive = step === this;
@@ -42,12 +48,26 @@ export class AppComponent implements OnInit {
     this.questionService.getQuestions().subscribe(
       (response: Question[]) => {
         this.questions =response;
+        this.getQuestionResponses(this.questions[0].question);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
   }
+
+  public getQuestionResponses(question:string):void {
+    this.questionService.getQuestionResponses(question).subscribe(
+      (response: Files[]) => {
+        this.questionResponses =response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+
 
   public getQuestionn():void {
     this.questionService.getQuestionn(this.size).subscribe(
@@ -89,11 +109,24 @@ export class AppComponent implements OnInit {
     );
   }
 
+  public onUpdateFiles(filess:Files):void{
+    this.editFiles = filess ;
+    this.questionService.updateFiles(filess).subscribe(
+      (response:Question) => {
+        console.log(response);
 
+      },
+      (error:HttpErrorResponse) => {
+        alert(error.message);
+      }
 
-  public onUpdateQuestion(question:Question):void{
+    );
+  }
+
+  public onUpdateQuestion(question:Question,newResponse:string):void{
     this.editQuestion = question ;
-    this.questionService.updateQuestion(question).subscribe(
+    this.editQuestion.response=newResponse;
+    this.questionService.updateQuestion(this.editQuestion).subscribe(
       (response:Question) => {
         console.log(response);
         this.getQuestion();
@@ -104,6 +137,7 @@ export class AppComponent implements OnInit {
 
     );
   }
+
 
 
   public onDeleteQuestion(questionId:string):void{
@@ -157,5 +191,29 @@ export class AppComponent implements OnInit {
     container?.appendChild(button);
     button.click();
   }
+
+
+
+  onFileSelected(event:any) {
+    console.log('entering on file selected');
+    const file:File = event.target.files[0];
+
+    if (file) {
+
+      this.fileName = file.name;
+
+      console.log('File name '+this.fileName);
+
+      const formData = new FormData();
+      this.questionService.upload(file).subscribe();
+      console.log('after subscribe');
+
+
+    }
+  }
+
+
+
+
 }
 
